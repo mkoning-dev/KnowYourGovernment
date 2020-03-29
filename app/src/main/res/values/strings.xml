@@ -3,4 +3,9 @@
     <string name="separator">Separator</string>
     <string name="about">About</string>
     <string name="search">Search</string>
+    <string name="version_1_0">Version 1.0</string>
+    <string name="_2020_martijn_koning">© 2020, Martijn Koning</string>
+    <string name="google_civic_information_api"><a href="https://developers.google.com/civic-information/">Google Civic Information API</a></string>
+    <string name="powered_by">Powered by</string>
+    <string name="know_your_government">Know Your Government</string>
 </resources>

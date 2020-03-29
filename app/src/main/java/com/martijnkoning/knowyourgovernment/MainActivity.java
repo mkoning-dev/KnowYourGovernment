@@ -69,7 +69,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(MainActivity.this, "Search selected", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.about:
-                Toast.makeText(MainActivity.this, "About selected", Toast.LENGTH_SHORT).show();
+                Intent about = new Intent(this, About.class);
+                startActivity(about);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
