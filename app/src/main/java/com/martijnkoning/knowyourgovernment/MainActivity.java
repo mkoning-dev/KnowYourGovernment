@@ -33,15 +33,12 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
-    private static int MY_LOCATION_REQUEST_CODE_ID = 123;
     private LocationManager locationManager;
     private Criteria criteria;
 
     private final List<Official> officialList = new ArrayList<>();
 
     private RecyclerView recyclerView;
-
-    private OfficialsAdapter oAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PERMISSION_GRANTED) {
+            int MY_LOCATION_REQUEST_CODE_ID = 123;
             ActivityCompat.requestPermissions(
                     this,
                     new String[]{
@@ -72,13 +70,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         recyclerView = findViewById(R.id.RecyclerView);
 
-        oAdapter = new OfficialsAdapter(officialList, this);
+        OfficialsAdapter oAdapter = new OfficialsAdapter(officialList, this);
 
         recyclerView.setAdapter(oAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         for (int i = 0; i < 20; i++) {
-            officialList.add(new Official());
+            officialList.add(new Official("Senator", "John Doe", "123 State St", "Chicago", "IL", "60606", "Democrat", "312-222-2222", "http://www.google.com", "johndoe@gmail.com", "null", "null", "null", "null", "null"));
         }
 
     }
@@ -87,6 +85,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int pos = recyclerView.getChildLayoutPosition(v);
         Official o = officialList.get(pos);
+
+        Intent intent = new Intent(this, OfficialActivity.class);
+        intent.putExtra("official", o);
+        startActivity(intent);
+
         Toast.makeText(v.getContext(), "SHORT " + o.toString(), Toast.LENGTH_SHORT).show();
     }
 

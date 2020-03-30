@@ -1,6 +1,8 @@
 package com.martijnkoning.knowyourgovernment;
 
-public class Official {
+import java.io.Serializable;
+
+public class Official implements Serializable {
 
     private String office;
     private String name;
@@ -18,9 +20,11 @@ public class Official {
     private String twitter;
     private String youtube;
 
+    private static int ctr = 1;
+
     public Official(String office, String name, String address, String city, String state, String zip, String party, String phone, String url, String email, String photo, String google, String facebook, String twitter, String youtube) {
-        this.office = office;
-        this.name = name;
+        this.office = office + ctr;
+        this.name = name + ctr;
         this.address = address;
         this.city = city;
         this.state = state;
@@ -34,18 +38,8 @@ public class Official {
         this.facebook = facebook;
         this.twitter = twitter;
         this.youtube = youtube;
-    }
-
-
-    // to fill test array - delete
-    private static int ctr = 1;
-
-    Official() {
-        this.office = "House " + ctr;
-        this.name = "Firstname Lastname" + ctr;
         ctr++;
     }
-    // delete this
 
 
     public String getOffice() {
