@@ -18,4 +18,16 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="address">Address:</string>
+    <string name="website">Website:</string>
+    <string name="phone">Phone:</string>
+    <string name="email">Email:</string>
+    <string name="google_icon">Google+ Icon</string>
+    <string name="youtube_icon">YouTube Icon</string>
+    <string name="facebook_icon">Facebook Icon</string>
+    <string name="twitter_icon">Twitter Icon</string>
+    <string name="photo">Photo</string>
+    <string name="democratic_party_logo">Democratic Party Logo</string>
+    <string name="republican_party_logo">Republican Party Logo</string>
+    <string name="no_loc_data">No Data For Location</string>
 </resources>

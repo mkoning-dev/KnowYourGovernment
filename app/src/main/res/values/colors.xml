@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#a79aa9</color>
     <color name="colorPrimaryDark">#4f2652</color>
-    <color name="colorAccent">#d7d1d8</color>
+    <color name="colorAccent">#4f2652</color>
     <color name="republicanParty">#EA3223</color>
     <color name="democratParty">#0023F4</color>
     <color name="unknownParty">#000000</color>

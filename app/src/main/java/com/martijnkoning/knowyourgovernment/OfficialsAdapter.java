@@ -30,7 +30,6 @@ public class OfficialsAdapter extends RecyclerView.Adapter<MyViewHolder> {
                 .inflate(R.layout.official_list_row, parent, false);
 
         itemView.setOnClickListener(mainAct);
-        itemView.setOnLongClickListener(mainAct);
 
         return new MyViewHolder(itemView);
     }
@@ -42,7 +41,12 @@ public class OfficialsAdapter extends RecyclerView.Adapter<MyViewHolder> {
         Official official = officialList.get(position);
 
         holder.office.setText(official.getOffice());
-        holder.name.setText(official.getName());
+        String name;
+        if (official.getParty() != null)
+            name = official.getName() + " (" + official.getParty() + ")";
+        else
+            name = official.getName();
+        holder.name.setText(name);
     }
 
     @Override
