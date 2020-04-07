@@ -37,10 +37,8 @@ public class OfficialDownloader extends AsyncTask<String, Integer, String> {
     protected void onPostExecute(String s) {
         String address = parseJSONAddress(s);
         parseJSONOffices(s);
-        mainActivity.createlist(address, officialList);
+        mainActivity.createList(address, officialList);
     }
-
-
 
     @Override
     protected String doInBackground(String... strings) {

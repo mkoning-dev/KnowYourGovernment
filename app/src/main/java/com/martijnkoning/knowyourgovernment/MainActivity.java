@@ -70,6 +70,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    // Runs on post execute of OfficalDownloader
+    // Adds downloaded officials to officialList if not empty
+    public void createList(String address, List<Official> oList) {
+        ((TextView) findViewById(R.id.loc_address)).setText(address);
+        officialList.clear();
+        if (oList.isEmpty())
+            ((TextView) findViewById(R.id.loc_address)).setText(R.string.no_loc_data);
+        else
+            officialList.addAll(oList);
+
+        oAdapter.notifyDataSetChanged();
+    }
+
+    // When official in list is clicked, go to Official Activity
     @Override
     public void onClick(View v) {
         int pos = recyclerView.getChildLayoutPosition(v);
@@ -79,10 +93,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.putExtra("official", o);
         intent.putExtra("address", ((TextView) findViewById(R.id.loc_address)).getText());
         startActivity(intent);
-
-        //Toast.makeText(v.getContext(), "SHORT " + o.toString(), Toast.LENGTH_SHORT).show();
     }
 
+    // Options menu related items
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -93,7 +106,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search:
-                searchClicked();
+                if (doNetCheck())
+                    searchClicked();
+                else
+                    noNetworkDialog();
                 return true;
             case R.id.about:
                 Intent about = new Intent(this, About.class);
@@ -104,6 +120,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // Shows the search dialog
+    // If data is entered and there is an internet connection, do location search
+    // If there is no internet connection, display dialog
+    // If there is and no data is entered, do nothing
+    // If no results are found, show toast indicating so
     public void searchClicked() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -115,11 +136,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if (doNetCheck()) {
-                    String zip = doLocationName(et.getText().toString());
-                    if (!zip.equals("noloc"))
-                        new OfficialDownloader(MainActivity.this).execute(zip);
-                    else
-                        Toast.makeText(MainActivity.this, "No location found!", Toast.LENGTH_SHORT).show();
+                    if (!et.getText().toString().trim().isEmpty()) {
+                        String zip = doLocationName(et.getText().toString());
+                        if (!zip.equals("noloc"))
+                            new OfficialDownloader(MainActivity.this).execute(zip);
+                        else
+                            Toast.makeText(MainActivity.this, "No location found!", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else {
                     officialList.clear();
@@ -142,6 +165,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog.show();
     }
 
+    // Check for internet connection
+    private boolean doNetCheck() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) return false;
+
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+        return netInfo != null && netInfo.isConnected();
+    }
+
+    // If there is no internet connection, show this dialog
+    public void noNetworkDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("No Network Connection");
+        builder.setMessage("Data cannot be accessed/loaded\n" +
+                "without an internet connection.");
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    // Location search related code below
     @SuppressLint("MissingPermission")
     private String setLocation() {
 
@@ -217,7 +264,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             List<Address> addresses;
 
             addresses = geocoder.getFromLocation(lat, lon, 1);
-            return addresses.get(0).getPostalCode();
+            if (addresses.get(0).getPostalCode() != null)
+                return addresses.get(0).getPostalCode();
+            else
+                return "noloc";
 
         } catch (IOException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -226,33 +276,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return "noloc";
     }
 
-    public void createlist(String address, List<Official> oList) {
-        ((TextView) findViewById(R.id.loc_address)).setText(address);
-        officialList.clear();
-        officialList.addAll(oList);
-        oAdapter.notifyDataSetChanged();
-
-    }
-
-    // Check for internet connection
-    private boolean doNetCheck() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm == null) return false;
-
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-
-        return netInfo != null && netInfo.isConnected();
-    }
-
-    public void noNetworkDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle("No Network Connection");
-        builder.setMessage("Data cannot be accessed/loaded\n" +
-                    "without an internet connection.");
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
 }
